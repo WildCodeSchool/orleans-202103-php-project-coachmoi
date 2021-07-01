@@ -15,6 +15,7 @@ class ProfileClientController extends AbstractController
      */
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('profile_client/index.html.twig');
     }
 }
