@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use App\Entity\User;
 use DateTime;
 use App\Entity\Activity;
@@ -72,7 +73,7 @@ class Coach
      * @ORM\Column(type="string", length=255)
      * @var string
      */
-    private ?string $photo ="";
+    private ?string $photo = "";
 
     /**
      * @ORM\Column(type="datetime", nullable="true")
