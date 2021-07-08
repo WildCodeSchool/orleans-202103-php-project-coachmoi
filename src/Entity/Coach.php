@@ -1,17 +1,16 @@
 <?php
 
 namespace App\Entity;
-
 use App\Entity\User;
-use DateTimeInterface;
+use DateTime;
 use App\Entity\Activity;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
-use App\Repository\CoachRepository;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CoachRepository::class)
@@ -58,16 +57,28 @@ class Coach
 
     /**
      * @Vich\UploadableField(mapping="coaches", fileNameProperty="photo")
+     * @Assert\File(
+     *      maxSize = "2M",
+     *      mimeTypes = {
+     *              "image/jpg", "image/jpg",
+     *              "image/jpeg", "image/jpeg",
+     *              "imaes/png", "image/webp"},
+     * )
      * @var File|null
      */
     private $photoFile;
 
     /**
-     * @ORM\Column(type="string")
-     *
-     * @var string|null
+     * @ORM\Column(type="string", length=255)
+     * @var string
      */
-    private ?string $photo;
+    private ?string $photo ="";
+
+    /**
+     * @ORM\Column(type="datetime", nullable="true")
+     * @var \DateTimeInterface|null
+     */
+    private $updatedAt;
 
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="coach", cascade={"persist", "remove"})
@@ -275,15 +286,18 @@ class Coach
         return $this;
     }
 
-    public function setPhotoFile(?File $photoFile = null): void
+    public function setPhotoFile(?File $photo): self
     {
-        $this->photoFile = $photoFile;
+        $this->photoFile = $photo;
+        $this->updatedAt = new DateTimeImmutable('now');
+        return $this;
     }
 
     public function getPhotoFile(): ?File
     {
         return $this->photoFile;
     }
+
 
     public function setPhoto(?string $photo): void
     {
@@ -293,5 +307,17 @@ class Coach
     public function getPhoto(): ?string
     {
         return $this->photo;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt = null): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 }
