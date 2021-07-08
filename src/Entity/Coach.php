@@ -3,15 +3,19 @@
 namespace App\Entity;
 
 use App\Entity\User;
+use DateTimeInterface;
 use App\Entity\Activity;
+use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Repository\CoachRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=CoachRepository::class)
+ * @Vich\Uploadable
  */
 class Coach
 {
@@ -53,7 +57,15 @@ class Coach
     private ?int $hourlyRate;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Vich\UploadableField(mapping="coaches", fileNameProperty="photo")
+     * @var File|null
+     */
+    private $photoFile;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @var string|null
      */
     private ?string $photo;
 
@@ -61,7 +73,6 @@ class Coach
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="coach", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-
     private User $user;
 
     /**
@@ -168,18 +179,6 @@ class Coach
         return $this;
     }
 
-    public function getPhoto(): ?string
-    {
-        return $this->photo;
-    }
-
-    public function setPhoto(?string $photo): self
-    {
-        $this->photo = $photo;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -274,5 +273,25 @@ class Coach
         }
 
         return $this;
+    }
+
+    public function setPhotoFile(?File $photoFile = null): void
+    {
+        $this->photoFile = $photoFile;
+    }
+
+    public function getPhotoFile(): ?File
+    {
+        return $this->photoFile;
+    }
+
+    public function setPhoto(?string $photo): void
+    {
+        $this->photo = $photo;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
     }
 }

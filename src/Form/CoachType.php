@@ -5,11 +5,12 @@ namespace App\Form;
 use App\Entity\Coach;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class CoachType extends AbstractType
 {
@@ -25,7 +26,7 @@ class CoachType extends AbstractType
             'widget' => 'single_text',
             ])
             ->add('hasVehicle', CheckboxType::class, [
-                'label' => "Possède un véhicule :"
+                'label' => 'Possède un véhicule :'
             ])
             ->add('qualification', TextType::class, [
                 'label' => 'Qualitification :'
@@ -37,7 +38,16 @@ class CoachType extends AbstractType
                 'label' => 'Biographie'
             ])
             ->add('hourlyRate', IntegerType::class, [
-                'label' => 'Taux horaire    '
+                'label' => 'Taux horaire'
+            ])
+            ->add('photoFile', VichImageType::class, [
+                'label' => 'Photo :',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label_attr' => [
+                    'class' => 'form-label'
+                ]
             ])
         ;
     }
